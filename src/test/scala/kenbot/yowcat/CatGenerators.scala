@@ -4,33 +4,33 @@ import org.scalacheck._
 import org.scalacheck.Prop._
 
 
-class CatGenerators(val cat: Cat) {
+class CatGenerators[C <: Cat](val cat: C) {
   import cat._
 
-  private case class Composable2(g: Arr, f: Arr)
-  private val composable2: Stream[Composable2] = for {
+  case class Composable2(g: Arr, f: Arr)
+  val composable2: Stream[Composable2] = for {
     f <- arrows
     g <- arrows
     if canCompose(g,f)
   } yield Composable2(g, f)
 
-  private case class Composable3(f: Arr, g: Arr, h: Arr)
-  private val composable3: Stream[Composable3] = for {
+  case class Composable3(f: Arr, g: Arr, h: Arr)
+  val composable3: Stream[Composable3] = for {
     Composable2(g, f) <- composable2
     h <- arrows
     if canCompose(h,g)
   } yield Composable3(f, g, h)
 
-  private implicit def arbComposable2: Arbitrary[Composable2] = 
+  implicit def arbComposable2: Arbitrary[Composable2] = 
     Arbitrary(Generators.fromStream(composable2))
 
-  private implicit def arbComposable3: Arbitrary[Composable3] = 
+  implicit def arbComposable3: Arbitrary[Composable3] = 
     Arbitrary(Generators.fromStream(composable3))
 
-  private implicit def arbObj: Arbitrary[Obj] = 
+  implicit def arbObj: Arbitrary[Obj] = 
     Arbitrary(Generators.fromStream(objects))
 
-  private implicit def arbArr: Arbitrary[Arr] = 
+  implicit def arbArr: Arbitrary[Arr] = 
     Arbitrary(Generators.fromStream(arrows))
 
 
