@@ -25,9 +25,9 @@ trait Category[Arr[_,_]] {
  */
 object Hask extends Category[Function1] {
 
-  def compose[A,B,C](g: B => C, f: A => B): A => C = ???
+  def compose[A,B,C](g: B => C, f: A => B): A => C = a => g(f(a))
 
-  def id[A]: A => A = ??? 
+  def id[A]: A => A = a => a
 }
 
 import scala.concurrent.Future
@@ -39,14 +39,13 @@ import scala.concurrent.Future
  * It maps elements in the domain to the codomain; unlike functions, 
  * it might map an element in the domain to zero or multiple elements in the codomain.
  */
-trait Rel[Dom, Cod] {
-  def mappings: Stream[(Dom,Cod)]
+trait Rel[Dom, Cod] extends Function[Dom, Stream[Cod]]
 
-  final def apply(dom: Dom): Stream[Cod] = mappings.collect { 
-    case (d, c) if d == dom => c  
-  } 
+object Rel {
+  def apply[A,B](f: A => Stream[B]) = new Rel[A,B] {
+    def apply(a: A): Stream[B] = f(a)
+  }
 }
-
 
 /**
  * Exercise 3b. 
@@ -55,7 +54,12 @@ trait Rel[Dom, Cod] {
  */
 object RelationsCategory extends Category[Rel] {
 
-  def compose[A,B,C](g: Rel[B, C], f: Rel[A, B]): Rel[A, C] = ??? 
+  def compose[A,B,C](g: Rel[B, C], f: Rel[A, B]): Rel[A, C] = 
+    Rel(a => f(a).flatMap(g))
 
-  def id[A]: Rel[A, A] = ??? 
+  def id[A]: Rel[A, A] = Rel(Stream(_)) 
 }
+
+
+
+
