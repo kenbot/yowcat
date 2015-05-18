@@ -7,3 +7,9 @@ initialCommands := """
   import kenbot.yowcat._;
   import Sets._
 """
+
+scalacOptions ++= Seq( 
+  "-deprecation",
+  "-unchecked",
+  "-feature",
+  "-language:higherKinds")

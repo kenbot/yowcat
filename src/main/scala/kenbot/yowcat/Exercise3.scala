@@ -27,7 +27,7 @@ object Hask extends Category[Function1] {
 
   def compose[A,B,C](g: B => C, f: A => B): A => C = a => g(f(a))
 
-  def id[A]: A => A = a => a
+  def id[A]: A => A = identity
 }
 
 import scala.concurrent.Future
@@ -60,6 +60,40 @@ object RelationsCategory extends Category[Rel] {
   def id[A]: Rel[A, A] = Rel(Stream(_)) 
 }
 
+
+/**
+ * Exercise 3c.
+ *
+ * Notice that in 3b. all we needed was 
+ * a) flatMap, and 
+ * b) creating a Stream from a value?
+ *
+ * That means that we have a category for any A => M[B], 
+ * where M can be flatMapped and created; that is to say, 
+ * M is a monad.
+ * 
+ * So we can throw away everything we know about Lists or Streams
+ * and write a more general version instead!
+ * 
+ * This is called a "Kleisli category". 
+ *
+ * Let's implement it.
+ */
+trait Monad[M[_]] {
+
+  def flatMap[A,B](ma: M[A], f: A => M[B]): M[B]
+
+  def unit[A](a: A): M[A]
+
+  type KleisliFn[A, B] = A => M[B] 
+
+  object KleisliCategory extends Category[KleisliFn] {
+    def compose[A,B,C](g: B => M[C], f: A => M[B]): A => M[C] = 
+      a => flatMap(f(a), g)
+
+      def id[A]: A => M[A] = unit 
+  }
+}
 
 
 
