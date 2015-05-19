@@ -45,14 +45,17 @@ object Exercise5 {
   }
 
 
+
   type MonoidHom[M,N] = Functor {
     val dom: Monoid[M]
     val cod: Monoid[N]
   }
 
-
   /**
    * Exercise 5b.
+   *
+   * A Monoid Homomorphism is a mapping between monoids, that preserves composition and identity.
+   * Since Monoids are categories, a Mon Hom is also a functor.
    *
    * Implement a Monoid Homomorphism between two monoids, given a function 
    * between the underlying sets.
@@ -87,7 +90,7 @@ object Monoids {
   val stringAppend: Monoid[String] = Monoid(strings)(_ + _, "")
 
   // The product of any two monoids M * N is a monoid
-  def pairMonoid[M,N](m: Monoid[M], n: Monoid[N]): Monoid[(M,N)] = Monoid(m.arrows zip n.arrows)(
+  def monoidProduct[M,N](m: Monoid[M], n: Monoid[N]): Monoid[(M,N)] = Monoid(m.arrows zip n.arrows)(
     (mn1, mn2) => (m.compose(mn1._1, mn2._1), 
                    n.compose(mn1._2, mn2._2)), (m.id(()), n.id(())))
 
@@ -110,11 +113,12 @@ object MonoidHoms {
   def anythingToUnit[M](m: Monoid[M]): MonoidHom[M, Unit] = 
     MonoidHom(m, unitMonoid, _ => ()) 
 
-
   val stringLength: MonoidHom[String, Int] = 
     MonoidHom(stringAppend, intAdd, _.length)
 
-  def composeProduct[M](m: Monoid[M]): MonoidHom[(M,M), M] = ???
+  def composeProduct[M](mon: Monoid[M]): MonoidHom[(M,M), M] = 
+    MonoidHom(monoidProduct(mon, mon), mon, mm => mon.compose(mm._1, mm._2))
 
-  def monoidSquared[M](m: Monoid[M]): MonoidHom[M, (M,M)] = ???
+  def monoidSquared[M](mon: Monoid[M]): MonoidHom[M, (M,M)] = 
+    MonoidHom(mon, monoidProduct(mon, mon), m => (m,m))
 }

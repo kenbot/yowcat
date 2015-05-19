@@ -30,4 +30,8 @@ object Exercise5dSpec extends Properties("Exercise 5d: Specific monoid homomorph
       Prop(mapArr(stringAppend.compose(a,b)) == 
            intAdd.compose(mapArr(a), mapArr(b)))
   }
+
+  //property("Composing M*M preserves identity") = { 
+  //  Prop(stringLength.mapArr(stringAppend.id(())) == intAdd.id(()))
+
 }
