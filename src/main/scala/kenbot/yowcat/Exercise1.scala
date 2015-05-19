@@ -64,6 +64,14 @@ trait Cat {
   // compose(id, a) == compose(a, id) == a
   def id(obj: Obj): Arr
 
+
+  // Housekeeping
+  override def toString() = catToString("Cat", this)
+
+  override def equals(o: Any) = o match {
+    case o: Cat => catEquals(this, o)
+    case _ => false
+  }
 }
 
 

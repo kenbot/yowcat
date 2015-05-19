@@ -51,8 +51,8 @@ object Cat1 extends Cat {
 
   def comp(g: Arr, f: Arr): Arr = (f._1, g._2) 
   def id(a: Obj): Arr = (a, a)
-}
 
+}
 
 object Cat2 extends Cat {
   type Obj = Color

@@ -30,20 +30,18 @@ object CatCat extends Cat {
    * Syntax: foo.asInstanceOf[Bar] 
    */
   override def comp(
-    f: Functor,
-    g: Functor): Functor = {
+      f: Functor,
+      g: Functor): Functor = new Functor {
 
-    new Functor {
-      val dom: g.dom.type = g.dom
-      val cod: f.cod.type = f.cod
+    val dom: g.dom.type = g.dom
+    val cod: f.cod.type = f.cod
 
-      // Assuming that f.dom == g.cod. 
-      def mapArr(arr: g.dom.Arr): f.cod.Arr =
-        f.mapArr(g.mapArr(arr).asInstanceOf[f.dom.Arr])
+    // Assuming that f.dom == g.cod. 
+    def mapArr(arr: g.dom.Arr): f.cod.Arr =
+      f.mapArr(g.mapArr(arr).asInstanceOf[f.dom.Arr])
 
-      def mapObj(obj: g.dom.Obj): f.cod.Obj =
-        f.mapObj(g.mapObj(obj).asInstanceOf[f.dom.Obj])
-    }
+    def mapObj(obj: g.dom.Obj): f.cod.Obj =
+      f.mapObj(g.mapObj(obj).asInstanceOf[f.dom.Obj])
   }
 
   def id(cat: Cat): Functor = new IdFunctor(cat)

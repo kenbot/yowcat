@@ -30,8 +30,18 @@ object Sets {
     import SubTypeSugar._
 
     val classHierarchy = new PosetCategory[Class[_]](classes, _ isSubTypeOf _)
-    val intsLTE = new PosetCategory[Int](ints, _ <= _)
-    Stream(classHierarchy, intsLTE)
+
+    def fooPoset: PosetCategory[_] = {
+      case class Foo(n: Int, under: Option[Int] = None) {
+        def isUnder(f: Foo) = f.n == n || under.contains(f.n) 
+      }
+
+      val foos = Stream(Foo(1), Foo(2, Some(1)), Foo(3, Some(2)), Foo(4))
+
+      new PosetCategory[Foo](foos, _ isUnder _)
+    }
+
+    Stream(classHierarchy, fooPoset)
   }
 
   def lists[A](elements: Stream[A]): Stream[List[A]] = {

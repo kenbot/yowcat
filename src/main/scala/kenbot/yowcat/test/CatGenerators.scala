@@ -27,10 +27,10 @@ class CatGenerators[C <: Cat](val cat: C) {
   implicit def arbComposable3: Arbitrary[Composable3] = 
     Arbitrary(Generators.fromStream(composable3))
 
-  implicit def arbObj: Arbitrary[Obj] = 
+  implicit def arbObj: Arbitrary[cat.Obj] = 
     Arbitrary(Generators.fromStream(objects))
 
-  implicit def arbArr: Arbitrary[Arr] = 
+  implicit def arbArr: Arbitrary[cat.Arr] = 
     Arbitrary(Generators.fromStream(arrows))
 
 

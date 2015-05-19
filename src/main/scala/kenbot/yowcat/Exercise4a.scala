@@ -15,6 +15,15 @@ trait Functor {
 
   def mapArr(arr: dom.Arr): cod.Arr 
   def mapObj(obj: dom.Obj): cod.Obj
+
+
+  // Housekeeping
+  override def toString = s"Functor($dom -> $cod)"
+  
+  override def equals(other: Any): Boolean = other match {
+    case f: Functor => functorEquals(this, f)
+    case _ => false
+  }
 }
 
 
@@ -24,9 +33,11 @@ trait Functor {
  * The simplest functor is of course the identity functor, 
  * which maps a category to itself.
  */
-class IdFunctor(val cat: Cat) extends Functor {
+case class IdFunctor(val cat: Cat) extends Functor {
   val dom, cod: cat.type = cat
 
   def mapArr(arr: cat.Arr): cat.Arr = arr
   def mapObj(obj: cat.Obj): cat.Obj = obj
+
+  override def toString = s"IdFunctor($cat)"
 }
