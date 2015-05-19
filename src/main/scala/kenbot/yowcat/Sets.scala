@@ -44,6 +44,11 @@ object Sets {
     Stream(classHierarchy, fooPoset)
   }
 
+  def asciiChars: Stream[Char] = (' ' to '~').toStream 
+
+  def strings: Stream[String] = 
+    lists(asciiChars).map(list => new String(list.toArray))
+
   def lists[A](elements: Stream[A]): Stream[List[A]] = {
     def listsOfLength(n: Int): Stream[List[A]] = { 
       if (n == 0) Stream(Nil)

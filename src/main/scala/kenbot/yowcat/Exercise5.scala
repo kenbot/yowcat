@@ -24,10 +24,6 @@ object Exercise5 {
     type Arr = M
   }
 
-  type MonoidHom[M,N] = Functor {
-    val dom: Monoid[M]
-    val cod: Monoid[N]
-  }
 
   /**
    * Exercise 5a.
@@ -47,10 +43,21 @@ object Exercise5 {
     def objects: Stream[Unit] = Stream(())
     def arrows = set
   }
-}
 
-object MonoidHom {
-  def apply[M, N](m: Monoid[M], n: Monoid[N], f: M => N): MonoidHom[M,N] = new Functor {
+
+  type MonoidHom[M,N] = Functor {
+    val dom: Monoid[M]
+    val cod: Monoid[N]
+  }
+
+
+  /**
+   * Exercise 5b.
+   *
+   * Implement a Monoid Homomorphism between two monoids, given a function 
+   * between the underlying sets.
+   */
+  def MonoidHom[M, N](m: Monoid[M], n: Monoid[N], f: M => N): MonoidHom[M,N] = new Functor {
     val dom: m.type = m
     val cod: n.type = n
 
@@ -60,13 +67,12 @@ object MonoidHom {
 }
 
 /**
- * Exercise 5b.
+ * Exercise 5c.
  *
  * Using the definition we just created, create the following monoids:
  */ 
 object Monoids {
   import Sets._
-   
 
   val intAdd: Monoid[Int] = Monoid(ints)(_ + _, 0)
 
@@ -75,10 +81,36 @@ object Monoids {
   val boolAnd: Monoid[Boolean] = Monoid(booleans)(_ && _, true)
 
   val boolOr: Monoid[Boolean] = Monoid(booleans)(_ || _, false)
+
+  val stringAppend: Monoid[String] = Monoid(strings)(_ + _, "")
+
+  // This is the terminal (or "final") monoid; this means that 
+  // every other Monoid has a unique homomorphism to it.
+  //
+  // As a category, it is the trivial category called "1", and is the terminal
+  // category as well: every category has a unique functor to it!
+  val unitMonoid: Monoid[Unit] = Monoid(unit)((_,_) => (), ())
 }
 
 /**
- * Exercise 5c. 
+ * Exercise 5d.
+ *
+ * Implement the following monoid homomorphisms:
+ */
+object MonoidHoms {
+  import Monoids._
+
+  def anythingToUnit[M](m: Monoid[M]): MonoidHom[M, Unit] = 
+    MonoidHom(m, unitMonoid, _ => ()) 
+
+
+  def stringLength: MonoidHom[String, Int] = 
+    MonoidHom(stringAppend, intAdd, _.length)
+}
+
+
+/**
+ * Exercise 5e. 
  *
  * A "Free Monoid" generated from a set is the most efficient 
  * way to generate a monoid from some set (which might not be a monoid). 
@@ -97,4 +129,3 @@ object FreeMonoid {
   def apply[A](set: Stream[A]): Monoid[List[A]] = 
     Monoid(Sets.lists(set))(_ ++ _, Nil)
 }
-
