@@ -86,6 +86,11 @@ object Monoids {
 
   val stringAppend: Monoid[String] = Monoid(strings)(_ + _, "")
 
+  // The product of any two monoids M * N is a monoid
+  def pairMonoid[M,N](m: Monoid[M], n: Monoid[N]): Monoid[(M,N)] = Monoid(m.arrows zip n.arrows)(
+    (mn1, mn2) => (m.compose(mn1._1, mn2._1), 
+                   n.compose(mn1._2, mn2._2)), (m.id(()), n.id(())))
+
   // This is the terminal (or "final") monoid; this means that 
   // every other Monoid has a unique homomorphism to it.
   //
@@ -106,6 +111,10 @@ object MonoidHoms {
     MonoidHom(m, unitMonoid, _ => ()) 
 
 
-  def stringLength: MonoidHom[String, Int] = 
+  val stringLength: MonoidHom[String, Int] = 
     MonoidHom(stringAppend, intAdd, _.length)
+
+  def composeProduct[M](m: Monoid[M]): MonoidHom[(M,M), M] = ???
+
+  def monoidSquared[M](m: Monoid[M]): MonoidHom[M, (M,M)] = ???
 }
