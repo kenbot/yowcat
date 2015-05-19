@@ -1,4 +1,25 @@
 object ScalaSyntaxHelp {
+  // Pairs/Tuples
+  // Pairs (or higher-arity tuples) are written with parens:
+  (1, 2)
+
+  // They can be constructed with an alternative syntax, used
+  // to emphasise a pair representing a mapping:
+  1 -> 2
+
+  // There are methods to extract the parts:
+  (1, 2)._1 // ==> 1
+  (1, 2)._2 // ==> 2
+
+  // They can be destructured in a pattern match expression:
+  (1,2) match {
+    case (a,b) => ??? 
+  }
+
+  // Or through a pattern-matching assignment:
+  val (a,b) = (1,2) // ==> a = 1, b = 2
+
+
   // Lists
   // 
   // The traditional immutable cons list.
