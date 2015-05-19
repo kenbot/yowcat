@@ -72,7 +72,9 @@ object Exercise5 {
  * Using the definition we just created, create the following monoids:
  */ 
 object Monoids {
-  import Sets._
+
+  // Some streams to use as sets, both finite & infinite
+  import Sets.{ints, booleans, strings, unit}
 
   val intAdd: Monoid[Int] = Monoid(ints)(_ + _, 0)
 
@@ -106,26 +108,4 @@ object MonoidHoms {
 
   def stringLength: MonoidHom[String, Int] = 
     MonoidHom(stringAppend, intAdd, _.length)
-}
-
-
-/**
- * Exercise 5e. 
- *
- * A "Free Monoid" generated from a set is the most efficient 
- * way to generate a monoid from some set (which might not be a monoid). 
- *
- * This means that it is created from nothing other than the set itself, 
- * and is itself nothing more than a Monoid.
- *
- * The Free Monoid over a set "A" is just lists of "A"! 
- *
- * Given that Monoids are categories, how does this relate to the Free Category in Exercise 2?
- *
- * Implement the free monoid over a set: 
- */
-object FreeMonoid {
-
-  def apply[A](set: Stream[A]): Monoid[List[A]] = 
-    Monoid(Sets.lists(set))(_ ++ _, Nil)
 }
