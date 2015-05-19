@@ -132,14 +132,14 @@ object ScalaSyntaxHelp {
     def foo: Foo
   }
 
-  val a: Outer = ??? 
-  val b: Outer = ???
+  val c: Outer = ???
+  val d: Outer = ???
 
   // a.Foo is "The type 'Foo', belonging to the fixed instance 'a'"
-  val foo1: a.Foo = a.foo
+  val foo1: c.Foo = c.foo
   //val foo2: a.Foo = b.foo // WON'T COMPILE!  b.foo is a b.Foo, not an a.Foo!
 
-  val onlyA: a.type = a
+  val onlyA: c.type = c
   //val onlyA2: a.type = b // WON'T COMPILE! 'a.type' only allows the single instance 'a'. 
 
 }
