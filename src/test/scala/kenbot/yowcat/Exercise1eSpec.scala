@@ -7,7 +7,7 @@ import org.scalacheck.Prop._
 object Exercise1eSpec extends Properties("Exercise 1e: Category of Posets") {
 
   import Exercise1._
-
+  
   implicit def arbitraryPoset: Arbitrary[PosetCategory[_]] = 
     Arbitrary(Generators.fromStream(Sets.posets))
 
@@ -36,10 +36,5 @@ object Exercise1eSpec extends Properties("Exercise 1e: Category of Posets") {
     (poset: PosetCategory[_]) => 
       val catGen = new CatGenerators(poset)
       catGen.identityDomain && catGen.identityCodomain
-  }
-
-  property("Arrows should be ordered") = forAll { 
-    (poset: PosetCategory[_]) => 
-      poset.arrows.forall { poset.order }
   }
 }
