@@ -28,4 +28,12 @@ object Exercise1Spec extends Properties("Exercise 1: Category of Classes and sub
   
   property("The identity subtype relationship should have the codomain of that Class") = catGen.identityCodomain
 
+  property("all arrows should be subtypes") = {
+    import SubTypeSugar._
+    import Exercise1.ClassesSubtypesCategory._
+
+    arrows.forall { arr =>
+      cod(arr) isSubTypeOf dom(arr)
+    }
+  }
 }

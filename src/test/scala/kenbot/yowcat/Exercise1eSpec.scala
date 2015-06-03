@@ -37,4 +37,12 @@ object Exercise1eSpec extends Properties("Exercise 1e: Category of Posets") {
       val catGen = new CatGenerators(poset)
       catGen.identityDomain && catGen.identityCodomain
   }
+
+  property("All arrows should be correctly ordered") = forAll {
+    (poset: PosetCategory[_]) =>
+      import poset._
+      arrows.forall { arr =>
+        order(cod(arr), dom(arr))
+      }
+  }
 }

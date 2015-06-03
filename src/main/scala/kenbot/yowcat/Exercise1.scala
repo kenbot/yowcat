@@ -7,9 +7,11 @@ package kenbot.yowcat
  * Ordinarily we'd make better use of the type system here, 
  * but we want to manipulate all these concepts at the value level.
  * 
- * Throughout, we'll use scala.Stream to represent sets or collections in the mathematical sense, even though they don't guarantee uniqueness.
+ * Throughout, we'll use scala.Stream to represent sets or collections
+ * in the mathematical sense, even though they don't guarantee uniqueness.
  *
- * To keep things simple, we'll use the standard JVM equality operator '==' to compare things. 
+ * To keep things simple, we'll use the standard JVM equality operator '=='
+ * to compare things.
  * 
  */
 trait Cat {
@@ -28,10 +30,14 @@ trait Cat {
   type Arr
   def arrows: Stream[Arr]
 
-  // 3. Get the domain of an arrow; the "A" in "A -> B" 
+  /**
+   * 3. Get the domain of an arrow; the "A" in "A -> B"
+   */
   def dom(f: Arr): Obj
 
-  // 4. Get the codomain of an arrow; the "B" in "A -> B"
+  /**
+   * 4. Get the codomain of an arrow; the "B" in "A -> B"
+   */
   def cod(f: Arr): Obj
 
 
@@ -56,12 +62,14 @@ trait Cat {
   protected[this] def comp(g: Arr, f: Arr): Arr
 
   final def canCompose(g: Arr, f: Arr): Boolean = 
-    cod(f) == dom(g) 
+    cod(f) == dom(g)
 
 
-  // 6. Identity
-  // Must be neutral when composed from the left or right: 
-  // compose(id, a) == compose(a, id) == a
+  /**
+   * 6. Identity
+   * Must be neutral when composed from the left or right:
+   * compose(id, a) == compose(a, id) == a
+   */
   def id(obj: Obj): Arr
 
 
@@ -80,6 +88,23 @@ trait Cat {
  *
  * Implement the category of JVM Classes and subtype-relationships.
  *
+ * Let's only use this hierarchy for our purposes:
+ *
+ * Food
+ *   +-- Fruit
+ *   |     +-- Banana
+ *   |     +-- Cumquat
+ *   |     +-- Grape
+ *   +-- Meat
+ *         +-- Kangaroo
+ *         +-- Yak
+ *         +-- Goat
+ *
+ * Tool
+ *   +-- Hammer
+ *   +-- Spanner
+ *
+ *
  * What are the objects, and what are the arrows?
  */
 object Exercise1 {
@@ -88,6 +113,13 @@ object Exercise1 {
   // For convenience, let's import a 
   // 'a.isSubTypeOf(b)' extension method for Class[_].
   import SubTypeSugar._
+
+  // Usage:
+  // classOf[Grape].isSubTypeOf(classOf[Fruit])
+  // =====> true
+  //
+  // classOf[Spanner].isSubTypeOf(classOf[Banana])
+  // =====> false
 
 
   // For convenience, let's just use these classes as the set of "all the classes".
@@ -116,6 +148,7 @@ object Exercise1 {
      */
     type Arr = ???
     def arrows: Stream[Arr] = ???
+
     /** 
      * Exercise 1b. 
      * 
@@ -150,7 +183,7 @@ object Exercise1 {
      * 
      * (Don't forget to make it associative!)
      */
-    def comp(g: Arr, f: Arr): Arr = ??? 
+    def comp(g: Arr, f: Arr): Arr = ???
 
   }
 
@@ -160,12 +193,14 @@ object Exercise1 {
    * partially ordered set, as represented by a Stream[S] and the given ordering function. 
    */
   class PosetCategory[S](set: Stream[S], orderingFn: (S,S) => Boolean) extends Cat {
+    final def order(a: Obj, b: Obj): Boolean = orderingFn(a,b)
 
     type Obj = S
     def objects: Stream[Obj] = set
 
     type Arr = ???
-    def arrows: Stream[Arr] = ??? 
+    def arrows: Stream[Arr] = ???
+
     def dom(f: Arr): Obj = ???
     def cod(f: Arr): Obj = ???
 
